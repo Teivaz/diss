@@ -31,7 +31,7 @@ n1 = n1 + 1;
 
 n = 10;
 cmap = hsv(n);
-sigma = 0.5;
+sigma = 0.3;
 ds = linspace(sigma - 0.5*sigma, sigma + 0.5*sigma, n);
 for fooo = 1:n
     sigma = 0.15;
@@ -40,7 +40,7 @@ for fooo = 1:n
     y2_ = 3.4;
     x2_ = 6.3;
     x1 = x1_ + ds(fooo);
-    x2 = x2_ - ds(fooo);
+    x2 = x2_ + ds(fooo);
     y1 = y1_ + ds(fooo);
     y2 = y2_ + ds(fooo);
 
@@ -140,7 +140,7 @@ for fooo = 1:n
     powDecay = powDecay./(len.^(alpha));
     
     time = len/SOL*1e9;
-    powDecay(1) = 0;
+    powDecay(1) = 0; % LOS
     %scatter(time, powDecay);
 
     maxval = max(powDecay);
