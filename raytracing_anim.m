@@ -12,33 +12,46 @@ L6 = [+0.0, +1.0, +0.8];    % [A, B, C] -> Ax + By + C = 0
 L7 = [+0.0, +1.0, +0.0];    % [A, B, C] -> Ax + By + C = 0
 L8 = [+0.0, +1.0, +5.0];    % [A, B, C] -> Ax + By + C = 0
 
-walls = [L1; L2; L3; L4; L5; L6];
-floor = [L7; L8];
+%walls = [L1; L2; L3; L4; L5; L6];
+walls = [L3; L6; L1; L5];
+%floor = [L7; L8];
+floor = [L7];
 
 n1 = linspace(1,1,9);
 n2 = [1, linspace(4.5,4.5, 4), linspace(10, 10, 2), linspace(4.5,4.5, 2)];
 
-for fooo = 1:10
+n = 10;
+cmap = hsv(n);
+sigma = 0.5;
+ds = linspace(sigma - 0.5*sigma, sigma + 0.5*sigma, n);
+for fooo = 1:n
     sigma = 0.15;
-    y1 = 3.5 + sigma.*randn(1);
-    x1 = 4.0 + sigma.*randn(1);
-    y2 = 3.4 + sigma.*randn(1);
-    x2 = 6.3 + sigma.*randn(1);
-    
+    y1_ = 3.5;
+    x1_ = 4.0;
+    y2_ = 3.4;
+    x2_ = 6.3;
+    x1 = x1_ + ds(fooo);
+    x2 = x2_ ;%+ ds(fooo);
+    y1 = y1_ + ds(fooo);
+    y2 = y2_ ;%+ ds(fooo);
+
+
+
 Tx = [x1, y1, 0.85];    % [x, y, h] Transmitter
 Rx = [x2, y2, 0.85];    % [x, y, h] Receiever
 
-%p = 0:0.1:7;
+p = 0:0.1:7;
 
 figure(1);
-scatter(Tx(1), Tx(2));
+set(gcf, 'colormap', cmap);
+scatter(Tx(1), Tx(2), 50, fooo);
 hold on;
-scatter(Rx(1), Rx(2));
+scatter(Rx(1), Rx(2), 50, fooo);
 
 indc = 1;
 cosAngle = zeros(1, 9);
 cosAngle(indc) = 0;
-aSq = len(1)^2;
+aSq = 1; % len(1)^2;
 
 ind = 1;
 len = zeros(1, 9);
@@ -96,6 +109,7 @@ end
 xlim([-0.1, 7.1]);
 ylim([-0.1, 6.1]);
 figure(2);
+set(gcf, 'colormap', cmap);
 hold on;
 pow0 = 1;
 alpha = 2;
@@ -113,14 +127,16 @@ time = len/SOL*1e9;
 %powDecay(1) = 0;
 %scatter(time, powDecay);
 
-powDecay = powDecay./max(powDecay);
-plot(time, powDecay, 'og')
+powDecay = powDecay./max(powDecay, 1);
+plot(time, powDecay, 'o', 'color', cmap(fooo,:))
 hold on;
 ex1_time = h14(:,1);
 ex1_ampl = h14(:,2);
 ex1_ampl = ex1_ampl./max(ex1_ampl);
-plot(ex1_time, ex1_ampl, 'x');
+plot(ex1_time, ex1_ampl, 'kx');
+hold off;
 
 drawnow;
+hold off;
 end
 
