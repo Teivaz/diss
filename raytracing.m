@@ -83,7 +83,7 @@ pow0 = 1;
 alpha = 2;
 sinAngle = sqrt(1 - cosAngle.^2);
 
-n1 = 1; n2 = 8;
+n1 = 1; n2 = 9;
 %Snell's law
 sinAngle2 = sinAngle.*n1./n2;
 cosAngle2 = sqrt(1 - sinAngle2.^2);
@@ -93,9 +93,27 @@ Q = (n1.*cosAngle - n2.*cosAngle2)./(n1.*cosAngle + n2.*cosAngle2);
 powDecay = Q.^2.*pow0./(len.^(alpha));
 time = len/SOL*1e9;
 
+powDecay = powDecay./max(powDecay);
 %scatter(time, powDecay);
-plot(ex1_time, ex1_ampl, 'd', time, powDecay, 'or')
-
+plot(time, powDecay, 'or')
+hold on;
+ex1_time = h14(:,1);
+ex1_ampl = h14(:,2);
+ex1_ampl = ex1_ampl./max(ex1_ampl);
+plot(ex1_time, ex1_ampl, 'xr');
+ex1_time = h13(:,1);
+ex1_ampl = h13(:,2);
+ex1_ampl = ex1_ampl./max(ex1_ampl);
+plot(ex1_time, ex1_ampl, 'xg');
+ex1_time = h24(:,1);
+ex1_ampl = h24(:,2);
+ex1_ampl = ex1_ampl./max(ex1_ampl);
+plot(ex1_time, ex1_ampl, 'xb');
+ex1_time = h23(:,1);
+ex1_ampl = h23(:,2);
+ex1_ampl = ex1_ampl./max(ex1_ampl);
+plot(ex1_time, ex1_ampl, 'xk');
+hold off;
 
 %%
 %--------------------
