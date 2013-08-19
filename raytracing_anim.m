@@ -61,7 +61,7 @@ for L = walls'
     indc = indc+1;
     cosAngle(indc) = -(aSq - b^2 - c^2)/(4*b*c);
     
-    scatter(X, Y, '.k');
+    plot(X, Y, 'k');
     scatter(Rp(1), Rp(2), 'r', 'filled');
     scatter(RxP(1), RxP(2), 'b', 'filled');
     scatter(TxP(1), TxP(2), 'b', 'filled');
@@ -88,7 +88,7 @@ for L = floor'
     indc = indc+1;
     cosAngle(indc) = -(aSq - b^2 - c^2)/(4*b*c);
     
-%    scatter(X, Y, '.b');
+%    plot(X, Y, '--b');
 %    scatter(Rp(1), Rp(2), 'r', 'filled');
 end
 
