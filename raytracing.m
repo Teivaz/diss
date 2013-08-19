@@ -43,7 +43,7 @@ for L = walls'
     c = norm(Rp - Rx(1:2));
     cosAngle = [cosAngle, -(aSq - b^2 - c^2)/(4*b*c)];
     
-    scatter(X, Y, '.k');
+    plot(X, Y, 'k');
     scatter(Rp(1), Rp(2), 'r', 'filled');
     %scatter(RxP(1), RxP(2), 'b', 'filled');
     %scatter(TxP(1), TxP(2), 'b', 'filled');
@@ -70,7 +70,7 @@ for L = floor'
     c = norm(Rp - Rx(1:2));
     cosAngle = [cosAngle, (b^2 + c^2 - aSq)/(4*b*c)];
     
-    scatter(X, Y, '.b');
+    plot(X, Y, '--b');
     scatter(Rp(1), Rp(2), 'r', 'filled');
 end
 
@@ -100,19 +100,19 @@ hold on;
 ex1_time = h14(:,1);
 ex1_ampl = h14(:,2);
 ex1_ampl = ex1_ampl./max(ex1_ampl);
-plot(ex1_time, ex1_ampl, 'xr');
-ex1_time = h13(:,1);
-ex1_ampl = h13(:,2);
-ex1_ampl = ex1_ampl./max(ex1_ampl);
-plot(ex1_time, ex1_ampl, 'xg');
-ex1_time = h24(:,1);
-ex1_ampl = h24(:,2);
-ex1_ampl = ex1_ampl./max(ex1_ampl);
-plot(ex1_time, ex1_ampl, 'xb');
-ex1_time = h23(:,1);
-ex1_ampl = h23(:,2);
-ex1_ampl = ex1_ampl./max(ex1_ampl);
-plot(ex1_time, ex1_ampl, 'xk');
+plot(ex1_time, ex1_ampl, 'x');
+% ex1_time = h13(:,1);
+% ex1_ampl = h13(:,2);
+% ex1_ampl = ex1_ampl./max(ex1_ampl);
+% plot(ex1_time, ex1_ampl, 'xg');
+% ex1_time = h24(:,1);
+% ex1_ampl = h24(:,2);
+% ex1_ampl = ex1_ampl./max(ex1_ampl);
+% plot(ex1_time, ex1_ampl, 'xb');
+% ex1_time = h23(:,1);
+% ex1_ampl = h23(:,2);
+% ex1_ampl = ex1_ampl./max(ex1_ampl);
+% plot(ex1_time, ex1_ampl, 'xk');
 hold off;
 
 %%
