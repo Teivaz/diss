@@ -2,16 +2,16 @@ SOL = 2.998e8;
 
 UseLos = 0;
 % Walls
-L1 = [+0.0, +1.0, +6.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
-L2 = [+1.0, +0.0, +7.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
+L1 = [+0.0, +1.0, +5.3, 4.5];    % [A, B, C] -> Ax + By + C = 0
+L2 = [+1.0, +0.0, +5.7, 4.5];    % [A, B, C] -> Ax + By + C = 0
 L3 = [+0.0, +1.0, +0.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
 L4 = [+1.0, +0.0, +0.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
 % Obstacles
-L5 = [+0.0, +1.0, +5.2, 10];    % [A, B, C] -> Ax + By + C = 0
-L6 = [+0.0, +1.0, +0.8, 10];    % [A, B, C] -> Ax + By + C = 0
+L5 = [+0.0, +1.0, +5.0, 10];    % [A, B, C] -> Ax + By + C = 0
+L6 = [+0.0, +1.0, +0.7, 10];    % [A, B, C] -> Ax + By + C = 0
 % Floor
 L7 = [+0.0, +1.0, +0.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
-L8 = [+0.0, +1.0, +5.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
+L8 = [+0.0, +1.0, +4.6, 4.5];    % [A, B, C] -> Ax + By + C = 0
 
 walls = [L1; L2; L3; L4; L5; L6];
 %walls = [0];
@@ -29,19 +29,19 @@ if size(floor, 2) > 1
 end
 n1 = n1 + 1;
 
-n = 10;
+n = 5;
 cmap = hsv(n);
-sigma = 0.3;
+sigma = 0.4;
 ds = linspace(sigma - 0.5*sigma, sigma + 0.5*sigma, n);
 for fooo = 1:n
     sigma = 0.15;
-    y1_ = 3.5;
-    x1_ = 4.0;
+    y1_ = 3.0;
+    x1_ = 1.0;
     y2_ = 3.4;
-    x2_ = 6.3;
-    x1 = x1_ + ds(fooo);
-    x2 = x2_ + ds(fooo);
-    y1 = y1_ + ds(fooo);
+    x2_ = 1.0;
+    x1 = x1_;% + ds(fooo);
+    x2 = x2_;% + ds(fooo);
+    y1 = y1_;% + ds(fooo);
     y2 = y2_ + ds(fooo);
 
 
@@ -119,8 +119,8 @@ for fooo = 1:n
         end
     end
     %hold off;
-    xlim([-0.1, 7.1]);
-    ylim([-0.1, 6.1]);
+    xlim([-0.1, 6.0]);
+    ylim([-0.1, 5.5]);
     figure(2);
     set(gcf, 'colormap', cmap);
     hold on;
