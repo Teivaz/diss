@@ -41,8 +41,8 @@ for fooo = 1:n
     x2_ = 1.0;
     x1 = x1_;% + ds(fooo);
     x2 = x2_;% + ds(fooo);
-    y1 = y1_;% + ds(fooo);
-    y2 = y2_ + ds(fooo);
+    y1 = y1_ + ds(fooo);
+    y2 = y2_;% + ds(fooo);
 
 
 
@@ -147,26 +147,27 @@ for fooo = 1:n
     powDecay = powDecay./maxval;
     plot(time, powDecay, 'o', 'color', cmap(fooo,:))
     hold on;
-    maxval = max([h14(:,2); h13(:,2); h23(:,2); h24(:,2)]);
-    ex1_time = h14(:,1);
-    ex1_ampl = h14(:,2);
+    drawnow;
+end
+    ex1_ampl = 10.^(1./(POS1(:,2)));
+    ex2_ampl = 10.^(1./(POS2(:,2)));
+    ex3_ampl = 10.^(1./(POS3(:,2)));
+    ex4_ampl = 10.^(1./(POS4(:,2)));
+    
+    maxval = max([ex1_ampl; ex2_ampl; ex3_ampl; ex4_ampl]);
+    ex1_time = POS1(:,1)*1e9;
     ex1_ampl = ex1_ampl./maxval;
-    plot(ex1_time, ex1_ampl, 'xr');
-    ex1_time = h13(:,1);
-    ex1_ampl = h13(:,2);
-    ex1_ampl = ex1_ampl./maxval;
-    plot(ex1_time, ex1_ampl, 'xg');
-    ex1_time = h24(:,1);
-    ex1_ampl = h24(:,2);
-    ex1_ampl = ex1_ampl./maxval;
-    plot(ex1_time, ex1_ampl, 'xb');
-    ex1_time = h23(:,1);
-    ex1_ampl = h23(:,2);
-    ex1_ampl = ex1_ampl./maxval;
-    plot(ex1_time, ex1_ampl, 'xk');
+    plot(ex1_time, ex1_ampl, 'r');
+    ex1_time = POS2(:,1)*1e9;
+    ex2_ampl = ex2_ampl./maxval;
+    plot(ex1_time, ex2_ampl, 'g');
+    ex1_time = POS3(:,1)*1e9;
+    ex3_ampl = ex3_ampl./maxval;
+    plot(ex1_time, ex3_ampl, 'b');
+    ex1_time = POS4(:,1)*1e9;
+    ex4_ampl = ex4_ampl./maxval;
+    plot(ex1_time, ex4_ampl, 'k');
     hold off;
 
-    drawnow;
     hold off;
-end
 
