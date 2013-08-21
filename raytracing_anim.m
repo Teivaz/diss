@@ -29,7 +29,7 @@ if size(floor, 2) > 1
 end
 n1 = n1 + 1;
 
-n = 5;
+n = 0;
 cmap = hsv(n);
 sigma = 0.4;
 ds = linspace(sigma - 0.5*sigma, sigma + 0.5*sigma, n);
@@ -149,25 +149,32 @@ for fooo = 1:n
     hold on;
     drawnow;
 end
-    ex1_ampl = 10.^(1./(POS1(:,2)));
-    ex2_ampl = 10.^(1./(POS2(:,2)));
-    ex3_ampl = 10.^(1./(POS3(:,2)));
-    ex4_ampl = 10.^(1./(POS4(:,2)));
-    
-    maxval = max([ex1_ampl; ex2_ampl; ex3_ampl; ex4_ampl]);
-    ex1_time = POS1(:,1)*1e9;
-    ex1_ampl = ex1_ampl./maxval;
-    plot(ex1_time, ex1_ampl, 'r');
-    ex1_time = POS2(:,1)*1e9;
-    ex2_ampl = ex2_ampl./maxval;
-    plot(ex1_time, ex2_ampl, 'g');
-    ex1_time = POS3(:,1)*1e9;
-    ex3_ampl = ex3_ampl./maxval;
-    plot(ex1_time, ex3_ampl, 'b');
-    ex1_time = POS4(:,1)*1e9;
-    ex4_ampl = ex4_ampl./maxval;
-    plot(ex1_time, ex4_ampl, 'k');
-    hold off;
+ex1_ampl = db2mag(0.5.*(POS1(:,2)));
+ex2_ampl = db2mag(0.5.*(POS2(:,2)));
+ex3_ampl = db2mag(0.5.*(POS3(:,2)));
+ex4_ampl = db2mag(0.5.*(POS4(:,2)));
+ex5_ampl = db2mag(0.5.*(POS5(:,2)));
 
-    hold off;
+maxval = max([ex1_ampl; ex2_ampl; ex3_ampl; ex4_ampl; ex5_ampl]);
+
+figure(2);
+set(gcf, 'colormap', cmap);
+hold on;
+ex1_time = POS1(:,1)*1e9;
+ex1_ampl = ex1_ampl./maxval;
+plot(ex1_time, ex1_ampl, 'r');
+ex1_time = POS2(:,1)*1e9;
+ex2_ampl = ex2_ampl./maxval;
+plot(ex1_time, ex2_ampl, 'g');
+ex1_time = POS3(:,1)*1e9;
+ex3_ampl = ex3_ampl./maxval;
+plot(ex1_time, ex3_ampl, 'b');
+ex1_time = POS4(:,1)*1e9;
+ex4_ampl = ex4_ampl./maxval;
+plot(ex1_time, ex4_ampl, 'm');
+ex1_time = POS5(:,1)*1e9;
+ex5_ampl = ex5_ampl./maxval;
+plot(ex1_time, ex5_ampl, 'k');
+
+hold off;
 
