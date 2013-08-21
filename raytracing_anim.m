@@ -29,15 +29,18 @@ if size(floor, 2) > 1
 end
 n1 = n1 + 1;
 
-n = 0;
+clear TIME;
+clear POWER;
+
+n = 5;
 cmap = hsv(n);
 sigma = 0.4;
-ds = linspace(sigma - 0.5*sigma, sigma + 0.5*sigma, n);
+ds = linspace(-0.5*sigma, 0.5*sigma, n);
 for fooo = 1:n
     sigma = 0.15;
     y1_ = 3.0;
     x1_ = 1.0;
-    y2_ = 3.4;
+    y2_ = 2.0;
     x2_ = 1.0;
     x1 = x1_;% + ds(fooo);
     x2 = x2_;% + ds(fooo);
@@ -85,7 +88,9 @@ for fooo = 1:n
             indc = indc+1;
             cosAngle(indc) = -(aSq - b^2 - c^2)/(4*b*c);
 
+            % plot walls
             plot(X, Y, 'k');
+            % plot reflection and projection points
             scatter(Rp(1), Rp(2), 'r', 'filled');
             scatter(RxP(1), RxP(2), 'b', 'filled');
             scatter(TxP(1), TxP(2), 'b', 'filled');
@@ -125,7 +130,7 @@ for fooo = 1:n
     set(gcf, 'colormap', cmap);
     hold on;
     pow0 = 1;
-    alpha = 2;
+    alpha = 1;
     sinAngle = sqrt(1 - cosAngle.^2);
 
 
@@ -140,41 +145,65 @@ for fooo = 1:n
     powDecay = powDecay./(len.^(alpha));
     
     time = len/SOL*1e9;
-    powDecay(1) = 0; % LOS
+    %powDecay(1) = 0; % LOS
     %scatter(time, powDecay);
 
     maxval = max(powDecay);
-    powDecay = powDecay./maxval;
-    plot(time, powDecay, 'o', 'color', cmap(fooo,:))
-    hold on;
-    drawnow;
+    %powDecay = powDecay./maxval;
+    if exist('TIME', 'var')
+        TIME = [TIME; time];
+    else
+        TIME = time;
+    end
+    if exist('POWER', 'var')
+        POWER = [POWER; powDecay];
+    else
+        POWER = powDecay;
+    end
+    
+%    plot(time, powDecay, 'o', 'color', cmap(fooo,:))
+    %hold on;
+   % drawnow;
 end
-ex1_ampl = db2mag(0.5.*(POS1(:,2)));
-ex2_ampl = db2mag(0.5.*(POS2(:,2)));
-ex3_ampl = db2mag(0.5.*(POS3(:,2)));
-ex4_ampl = db2mag(0.5.*(POS4(:,2)));
-ex5_ampl = db2mag(0.5.*(POS5(:,2)));
+
+POWER = POWER./max(max(POWER));
+
+figure(2);
+hold on;
+for a = 1:size(TIME, 1)
+    plot(TIME(a,:), POWER(a,:), 'o', 'color', cmap(a,:))
+end
+
+ex1_ampl = db2mag((POS1(:,2)));
+ex2_ampl = db2mag((POS2(:,2)));
+ex3_ampl = db2mag((POS3(:,2)));
+ex4_ampl = db2mag((POS4(:,2)));
+ex5_ampl = db2mag((POS5(:,2)));
+
+x1 = 2.688;
+x2 = 3.875;
+dx = x2 - x1;
 
 maxval = max([ex1_ampl; ex2_ampl; ex3_ampl; ex4_ampl; ex5_ampl]);
 
 figure(2);
 set(gcf, 'colormap', cmap);
 hold on;
-ex1_time = POS1(:,1)*1e9;
+ex1_time = POS1(:,1)*1e9 - dx;
 ex1_ampl = ex1_ampl./maxval;
-plot(ex1_time, ex1_ampl, 'r');
-ex1_time = POS2(:,1)*1e9;
+plot(ex1_time, ex1_ampl, 'color', cmap(1,:));
+ex1_time = POS2(:,1)*1e9 - dx;
 ex2_ampl = ex2_ampl./maxval;
-plot(ex1_time, ex2_ampl, 'g');
-ex1_time = POS3(:,1)*1e9;
+plot(ex1_time, ex2_ampl, 'color', cmap(2,:));
+ex1_time = POS3(:,1)*1e9 - dx;
 ex3_ampl = ex3_ampl./maxval;
-plot(ex1_time, ex3_ampl, 'b');
-ex1_time = POS4(:,1)*1e9;
+plot(ex1_time, ex3_ampl, 'color', cmap(3,:));
+ex1_time = POS4(:,1)*1e9 - dx;
 ex4_ampl = ex4_ampl./maxval;
-plot(ex1_time, ex4_ampl, 'm');
-ex1_time = POS5(:,1)*1e9;
+plot(ex1_time, ex4_ampl, 'color', cmap(4,:));
+ex1_time = POS5(:,1)*1e9 - dx;
 ex5_ampl = ex5_ampl./maxval;
-plot(ex1_time, ex5_ampl, 'k');
+plot(ex1_time, ex5_ampl, 'color', cmap(5,:));
 
 hold off;
 
