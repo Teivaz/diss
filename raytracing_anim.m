@@ -44,8 +44,8 @@ for fooo = 1:n
     x2_ = 1.0;
     x1 = x1_;% + ds(fooo);
     x2 = x2_;% + ds(fooo);
-    y1 = y1_ + ds(fooo);
-    y2 = y2_;% + ds(fooo);
+    y1 = y1_;% + ds(fooo);
+    y2 = y2_ - ds(fooo);
 
 
 
@@ -154,6 +154,9 @@ for fooo = 1:n
 end
 
 figure(1)
+xy = ellipse([x1, y1], [x2, y2], TIME(5, 2)*(SOL/1e9));
+plot(xy(1,:),xy(2,:));
+
 hold off
 xlim([-0.1, 6.0]);
 ylim([-0.1, 5.5]);
@@ -202,5 +205,6 @@ plot(ex1_time, ex5_ampl, 'color', cmap(5,:));
 hold off;
 xlim([0, 40]);
 set(gca, 'XTick', 0:40);
+set(gca, 'YScale', 'log');
 grid;
 
