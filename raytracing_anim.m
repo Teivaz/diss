@@ -1,4 +1,4 @@
-SOL = 2.998e8;
+SOL = 2.95e8;
 
 UseLos = 0;
 % Walls
@@ -123,12 +123,6 @@ for fooo = 1:n
         %    scatter(Rp(1), Rp(2), 'r', 'filled');
         end
     end
-    %hold off;
-    xlim([-0.1, 6.0]);
-    ylim([-0.1, 5.5]);
-    figure(2);
-    set(gcf, 'colormap', cmap);
-    hold on;
     pow0 = 1;
     alpha = 1;
     sinAngle = sqrt(1 - cosAngle.^2);
@@ -146,10 +140,7 @@ for fooo = 1:n
     
     time = len/SOL*1e9;
     %powDecay(1) = 0; % LOS
-    %scatter(time, powDecay);
-
-    maxval = max(powDecay);
-    %powDecay = powDecay./maxval;
+    
     if exist('TIME', 'var')
         TIME = [TIME; time];
     else
@@ -160,15 +151,18 @@ for fooo = 1:n
     else
         POWER = powDecay;
     end
-    
-%    plot(time, powDecay, 'o', 'color', cmap(fooo,:))
-    %hold on;
-   % drawnow;
 end
+
+figure(1)
+hold off
+xlim([-0.1, 6.0]);
+ylim([-0.1, 5.5]);
 
 POWER = POWER./max(max(POWER));
 
+
 figure(2);
+set(gcf, 'colormap', cmap);
 hold on;
 for a = 1:size(TIME, 1)
     plot(TIME(a,:), POWER(a,:), 'o', 'color', cmap(a,:))
@@ -206,4 +200,7 @@ ex5_ampl = ex5_ampl./maxval;
 plot(ex1_time, ex5_ampl, 'color', cmap(5,:));
 
 hold off;
+xlim([0, 40]);
+set(gca, 'XTick', 0:40);
+grid;
 
