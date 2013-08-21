@@ -7,7 +7,7 @@ L2 = [+1.0, +0.0, +5.7, 4.5];    % [A, B, C] -> Ax + By + C = 0
 L3 = [+0.0, +1.0, +0.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
 L4 = [+1.0, +0.0, +0.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
 % Obstacles
-L5 = [+0.0, +1.0, +5.0, 10];    % [A, B, C] -> Ax + By + C = 0
+L5 = [+0.0, +1.0, +4.6, 10];    % [A, B, C] -> Ax + By + C = 0
 L6 = [+0.0, +1.0, +0.7, 10];    % [A, B, C] -> Ax + By + C = 0
 % Floor
 L7 = [+0.0, +1.0, +0.0, 4.5];    % [A, B, C] -> Ax + By + C = 0
@@ -36,10 +36,17 @@ n = 5;
 cmap = hsv(n);
 sigma = 0.4;
 ds = linspace(-0.5*sigma, 0.5*sigma, n);
+
+figure(1);
+hold off;
+img = imread('schema.png');
+hold on;
+image([0, 5.7], [5.3, 0], img); 
+
 for fooo = 1:n
     sigma = 0.15;
     y1_ = 3.0;
-    x1_ = 1.0;
+    x1_ = 1.001;
     y2_ = 2.0;
     x2_ = 1.0;
     x1 = x1_;% + ds(fooo);
@@ -61,12 +68,12 @@ for fooo = 1:n
     scatter(Rx(1), Rx(2), 50, fooo);
 
     indc = 1;
-    cosAngle = zeros(1, size(walls, 1));
+    cosAngle = zeros(1, size(walls, 1) + size(floor, 1) + 1);
     cosAngle(indc) = 0;
     aSq = 1; % len(1)^2;    
 
     ind = 1;
-    len = zeros(1, size(walls, 1));
+    len = zeros(1, size(walls, 1) + size(floor, 1) + 1);
     len(ind) = norm(Rx - Tx);
     LOS = len(1);
     if size(walls, 2) > 1
@@ -154,13 +161,13 @@ for fooo = 1:n
 end
 
 figure(1)
-xy = ellipse([x1, y1], [x2, y2], TIME(5, 2)*(SOL/1e9));
+xy = ellipse([x1, y1], [x2, y2], TIME(5, 5));
 plot(xy(1,:),xy(2,:));
 
 hold off
 xlim([-0.1, 6.0]);
 ylim([-0.1, 5.5]);
-
+set(gca, 'DataAspectRatio', [1, 1, 1]);
 POWER = POWER./max(max(POWER));
 
 
