@@ -1,4 +1,4 @@
-SOL = 2.95e8;
+SOL = 3e8;
 
 UseLos = 0;
 % Walls
@@ -32,16 +32,16 @@ n1 = n1 + 1;
 clear TIME;
 clear POWER;
 
-n = 5;
+n = 1;
 cmap = hsv(n);
-sigma = 0.4;
+sigma = 0.0;
 ds = linspace(-0.5*sigma, 0.5*sigma, n);
 
 figure(1);
 hold off;
-img = imread('schema.png');
+%img = imread('schema.png');
 hold on;
-image([0, 5.7], [5.3, 0], img); 
+%image([0, 5.7], [5.3, 0], img); 
 
 for fooo = 1:n
     sigma = 0.15;
@@ -159,9 +159,9 @@ for fooo = 1:n
         POWER = powDecay;
     end
 end
-
+%%
 figure(1)
-xy = ellipse([x1, y1], [x2, y2], TIME(5, 5));
+xy = ellipse([x1, y1], [x2, y2], TIME(1, 3));
 plot(xy(1,:),xy(2,:));
 
 hold off
@@ -178,36 +178,36 @@ for a = 1:size(TIME, 1)
     plot(TIME(a,:), POWER(a,:), 'o', 'color', cmap(a,:))
 end
 
-ex1_ampl = db2mag((POS1(:,2)));
-ex2_ampl = db2mag((POS2(:,2)));
+% ex1_ampl = db2mag((POS1(:,2)));
+% ex2_ampl = db2mag((POS2(:,2)));
 ex3_ampl = db2mag((POS3(:,2)));
-ex4_ampl = db2mag((POS4(:,2)));
-ex5_ampl = db2mag((POS5(:,2)));
+% ex4_ampl = db2mag((POS4(:,2)));
+% ex5_ampl = db2mag((POS5(:,2)));
 
 x1 = 2.688;
 x2 = 3.875;
 dx = x2 - x1;
 
-maxval = max([ex1_ampl; ex2_ampl; ex3_ampl; ex4_ampl; ex5_ampl]);
+maxval = max([ex3_ampl]);%; ex2_ampl; ex3_ampl; ex4_ampl; ex5_ampl]);
 
 figure(2);
 set(gcf, 'colormap', cmap);
 hold on;
-ex1_time = POS1(:,1)*1e9 - dx;
-ex1_ampl = ex1_ampl./maxval;
-plot(ex1_time, ex1_ampl, 'color', cmap(1,:));
-ex1_time = POS2(:,1)*1e9 - dx;
-ex2_ampl = ex2_ampl./maxval;
-plot(ex1_time, ex2_ampl, 'color', cmap(2,:));
+% ex1_time = POS1(:,1)*1e9 - dx;
+% ex1_ampl = ex1_ampl./maxval;
+% plot(ex1_time, ex1_ampl, 'color', cmap(1,:));
+% ex1_time = POS2(:,1)*1e9 - dx;
+% ex2_ampl = ex2_ampl./maxval;
+% plot(ex1_time, ex2_ampl, 'color', cmap(2,:));
 ex1_time = POS3(:,1)*1e9 - dx;
 ex3_ampl = ex3_ampl./maxval;
-plot(ex1_time, ex3_ampl, 'color', cmap(3,:));
-ex1_time = POS4(:,1)*1e9 - dx;
-ex4_ampl = ex4_ampl./maxval;
-plot(ex1_time, ex4_ampl, 'color', cmap(4,:));
-ex1_time = POS5(:,1)*1e9 - dx;
-ex5_ampl = ex5_ampl./maxval;
-plot(ex1_time, ex5_ampl, 'color', cmap(5,:));
+plot(ex1_time, ex3_ampl, 'color', cmap(1,:));
+% ex1_time = POS4(:,1)*1e9 - dx;
+% ex4_ampl = ex4_ampl./maxval;
+% plot(ex1_time, ex4_ampl, 'color', cmap(4,:));
+% ex1_time = POS5(:,1)*1e9 - dx;
+% ex5_ampl = ex5_ampl./maxval;
+% plot(ex1_time, ex5_ampl, 'color', cmap(5,:));
 
 hold off;
 xlim([0, 40]);
