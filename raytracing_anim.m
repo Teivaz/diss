@@ -1,6 +1,6 @@
 SOL = 3e8;
 
-UseLos = 0;
+POS = POS4;
 % Walls
 L1 = [+0.0, +1.0, +5.3, 4.5];    % [A, B, C] -> Ax + By + C = 0
 L2 = [+1.0, +0.0, +5.7, 4.5];    % [A, B, C] -> Ax + By + C = 0
@@ -16,6 +16,10 @@ L8 = [+0.0, +1.0, +4.6, 4.5];    % [A, B, C] -> Ax + By + C = 0
 walls = [L1; L2; L3; L4; L5; L6];
 %walls = [0];
 floor = [L7; L8];
+
+TX = [1.001, 3.0, 0.85];
+RX = [1.0, 2.0, 0.85];
+RX(2) = 1.9;
 
 n1 = 0;
 n2 = 1;
@@ -44,20 +48,13 @@ hold on;
 %image([0, 5.7], [5.3, 0], img); 
 
 for fooo = 1:n
-    sigma = 0.15;
-    y1_ = 3.0;
-    x1_ = 1.001;
-    y2_ = 2.0;
-    x2_ = 1.0;
-    x1 = x1_;% + ds(fooo);
-    x2 = x2_;% + ds(fooo);
-    y1 = y1_;% + ds(fooo);
-    y2 = y2_ - ds(fooo);
+    x1 = TX(1);% + ds(fooo);
+    y1 = TX(2);% + ds(fooo);
+    x2 = RX(1);% + ds(fooo);
+    y2 = RX(2) - ds(fooo);
 
-
-
-    Tx = [x1, y1, 0.85];    % [x, y, h] Transmitter
-    Rx = [x2, y2, 0.85];    % [x, y, h] Receiever
+    Tx = [x1, y1, TX(3)];    % [x, y, h] Transmitter
+    Rx = [x2, y2, RX(3)];    % [x, y, h] Receiever
 
     p = 0:0.1:7;
 
@@ -159,6 +156,9 @@ for fooo = 1:n
         POWER = powDecay;
     end
 end
+
+POWER = POWER./max(max(POWER));
+
 %%
 figure(1)
 xy = ellipse([x1, y1], [x2, y2], TIME(1, 3));
@@ -168,7 +168,6 @@ hold off
 xlim([-0.1, 6.0]);
 ylim([-0.1, 5.5]);
 set(gca, 'DataAspectRatio', [1, 1, 1]);
-POWER = POWER./max(max(POWER));
 
 
 figure(2);
@@ -180,7 +179,7 @@ end
 
 % ex1_ampl = db2mag((POS1(:,2)));
 % ex2_ampl = db2mag((POS2(:,2)));
-ex3_ampl = db2mag((POS3(:,2)));
+ex3_ampl = db2mag((POS(:,2)));
 % ex4_ampl = db2mag((POS4(:,2)));
 % ex5_ampl = db2mag((POS5(:,2)));
 
@@ -199,7 +198,7 @@ hold on;
 % ex1_time = POS2(:,1)*1e9 - dx;
 % ex2_ampl = ex2_ampl./maxval;
 % plot(ex1_time, ex2_ampl, 'color', cmap(2,:));
-ex1_time = POS3(:,1)*1e9 - dx;
+ex1_time = POS(:,1)*1e9 - dx;
 ex3_ampl = ex3_ampl./maxval;
 plot(ex1_time, ex3_ampl, 'color', cmap(1,:));
 % ex1_time = POS4(:,1)*1e9 - dx;
