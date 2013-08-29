@@ -1,0 +1,5 @@
+ImpulseResp1.ai
+Spectrum1.ai
+filtered with elleptical filter:
+d = fdesign.bandpass( 2402e6, 2412e6, 2432e6, 2442e6, 35, 0.5, 35, Fs);
+hd = design(d, 'ellip', 'matchexactly', 'both');
