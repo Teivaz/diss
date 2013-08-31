@@ -42,20 +42,20 @@ SpectrumMaskAmpl = db2mag(SpectrumMaskAmpl);
 % [H, f] = freqz(b, 1, 512, 2);
 % plot(f,abs(H))
 
-for FiltDecay = 30:30;
+for FiltDecay = 24;
 %     d = fdesign.bandpass( 2402e6, 2412e6, 2432e6, 2442e6,...
 %                         FiltDecay, 0.5, FiltDecay, Fs);
-    d = fdesign.bandpass('N,Fp1,Fp2,Ap', 10, 2412e6, 2432e6, 0.5);
+    d = fdesign.bandpass('n,fst1,fst2,ast', 40, 2402e6, 2442e6, 50, Fs);
     lo = fdesign.lowpass(2432e6, 2442e6, 0.5, FiltDecay, Fs);
     hi = fdesign.highpass(2402e6, 2412e6, FiltDecay, 0.5, Fs);
     hlo = design(lo, 'ellip', 'matchexactly', 'passband' );
     hhi = design(hi, 'ellip', 'matchexactly', 'passband' );
 
-    hd = design(d, 'cheby2');%, 'matchexactly', 'passband');
+    hd = design(d);%, 'ellip');%, 'matchexactly', 'passband');
     %fvtool(hd)
     Y2 = Y;
     R = NewAmpl;
-    if (1)
+    if (0)
         Y2 = filter(hd, Y2);
         R = filter(hd, R);
     else
@@ -80,7 +80,7 @@ for FiltDecay = 30:30;
     end
     hold off
     title(['Position 1. Decay ', num2str(FiltDecay), ' [dB]'])
-    ylim([1e-5, 1])
+    ylim([1e-3, 1])
     xlim([0, 5e-8])
     %grid
 
