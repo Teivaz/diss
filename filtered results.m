@@ -42,6 +42,11 @@ SpectrumMaskAmpl = db2mag(SpectrumMaskAmpl);
 % [H, f] = freqz(b, 1, 512, 2);
 % plot(f,abs(H))
 
+
+Ts = 6.2500e-011;
+dt = 1.1870;
+NewTime = (1:801)*Ts;
+
 for FiltDecay = 24;
 %     d = fdesign.bandpass( 2402e6, 2412e6, 2432e6, 2442e6,...
 %                         FiltDecay, 0.5, FiltDecay, Fs);
@@ -50,6 +55,7 @@ for FiltDecay = 24;
     hi = fdesign.highpass(2402e6, 2412e6, FiltDecay, 0.5, Fs);
     hlo = design(lo, 'ellip', 'matchexactly', 'passband' );
     hhi = design(hi, 'ellip', 'matchexactly', 'passband' );
+    NewAmpl = zeros(size(NewTime));
 
     hd = design(d);%, 'ellip');%, 'matchexactly', 'passband');
     %fvtool(hd)
@@ -67,11 +73,16 @@ for FiltDecay = 24;
     Y2 = abs(Y2);
     R = abs(R);
     figure(2)
+    inputFunction = Y;
     semilogy(X, Y2./max(Y2), 'r');
     hold on
 
-    semilogy(NewTime, R./max(R), 'm')
+    %semilogy(NewTime, R./max(R), 'm')
     semilogy(X, Y./max(Y), 'g');
+    
+    [a, b] = find_extrems(X, Y2./max(Y2));
+    h = stem(a, b, 'fill');
+    set(get(h,'BaseLine'),'BaseValue',1e-3);
     for a = 1:size(POWER, 2)
         text( (TIME(a)+dx) * 1e-9, POWER(a)*(1.1 + 0.3*rand(1,1)), int2str(a));
 %         hStem = stem( (TIME(a)+dx) * 1e-9, POWER(a));
@@ -101,3 +112,24 @@ for FiltDecay = 24;
     grid
     pause(0.5);
 end
+
+%%
+thresh = 3e-6;
+extrems = diff(inputFunction);
+maxes = zeros(size(extrems));
+prev = extrems(1);
+for i = 1:numel(extrems)
+    maxes(i) = 1e-7;
+    if (sign(prev) ~= sign(extrems(i)))
+        maxes(i) = 1;        
+    end
+    prev = extrems(i);
+end
+
+plot(X(1:800), extrems, X(1:800), maxes);
+grid
+
+
+
+
+
