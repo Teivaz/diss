@@ -10,9 +10,9 @@ POS(6,:) = (POS6(19:801,2));
 POS(7,:) = (POS7(19:801,2));
 POS(8,:) = (POS8(19:801,2));
 POS(9,:) = (POS9(19:801,2));
-X = POS1(1:801, 1);
+X = POS9(1:801, 1);
 
-Y = db2mag(POS1(1:801, 2));
+Y = db2mag(POS9(1:801, 2));
 
 Fs = 1/(X(2) - X(1));
 for a = 1:9
@@ -83,12 +83,12 @@ for FiltDecay = 24;
     [a, b] = find_extrems(X, Y2./max(Y2));
     h = stem(a, b, 'fill');
     set(get(h,'BaseLine'),'BaseValue',1e-3);
-    for a = 1:size(POWER, 2)
-        text( (TIME(a)+dx) * 1e-9, POWER(a)*(1.1 + 0.3*rand(1,1)), int2str(a));
+%    for a = 1:size(POWER, 2)
+%        text( (TIME(a)+dx) * 1e-9, POWER(a)*(1.1 + 0.3*rand(1,1)), int2str(a));
 %         hStem = stem( (TIME(a)+dx) * 1e-9, POWER(a));
 %         hBase = get(hStem, 'Baseline');
 %         set(hBase, 'BaseValue', 1e-4);
-    end
+%    end
     hold off
     title(['Position 1. Decay ', num2str(FiltDecay), ' [dB]'])
     ylim([1e-3, 1])
