@@ -5,7 +5,6 @@ function [Y, impResp, two] = CreatePathFromClusters(clusters, time)
 NumberOfClusters = numel(clusters);
 
 impResp = [];
-figure(2);
 for a = 1:NumberOfClusters
     [x, y] = create_cluster2(clusters(a));
     impResp(a).x = x;
@@ -23,7 +22,7 @@ for a = 1:NumberOfClusters
     two(a).y = filter(hd, two(a).y);
     two(a).y = filter(hd, two(a).y);
     two(a).y = filter(hd, two(a).y);
-    two(a).y = filter(hd, two(a).y);
+    %two(a).y = filter(hd, two(a).y);
 end
 Y = two(1).y;
 for a = 2:NumberOfClusters

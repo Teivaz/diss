@@ -32,6 +32,7 @@ colors = hsv(NumberOfClusters);
 time = 1:0.1:140;
 time = time.*1e-9;
 
+optimize
 [Y, impResp, two] = CreatePathFromClusters(clusters, time);
 
 %figure(2);
@@ -42,14 +43,14 @@ for a = 1:NumberOfClusters
     set(gca, 'YScale', 'log');
     hold on;
 end
-%hold off;
-%figure(1)
-
 for a = 1:NumberOfClusters
     h = semilogy(time, abs(two(a).y));
     set(h, 'color', colors(a,:));
     hold on;
 end
+hold off;
+figure(1)
+
 semilogy(time, Y, 'k:');
 ylim([1e-6, 1]);
 hold off;
