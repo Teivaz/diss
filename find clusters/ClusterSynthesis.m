@@ -1,14 +1,19 @@
 % Limits
-ClusterLimits.StartTime = [0, 20];          % ns
-ClusterLimits.IntervalTime = [1, 10];       % ns
-ClusterLimits.StartPower = [0.01, 1];       % V
-ClusterLimits.DecayPower = [0.9, 8];       % 
-ClusterLimits.Number = [2, 8];              % 
+ClusterLimits.StartTime = [3, 30];          % ns
+ClusterLimits.IntervalTime = [1, 15];       % ns
+ClusterLimits.StartPower = [0.05, 1];       % V
+ClusterLimits.DecayPower = [1, 10];       % 
+ClusterLimits.Number = [2, 15];              % 
 
 rnd = @(a) a(1) + (a(2)-a(1)).*rand(1,1);
 rndi = @(a) a(1) + randi((a(2)-a(1)),1,1);
 
 lb = [...
+	2,...
+	ClusterLimits.IntervalTime(1),...
+	1,...
+	ClusterLimits.DecayPower(1),...
+	1,...
 	ClusterLimits.StartTime(1),...
 	ClusterLimits.IntervalTime(1),...
 	ClusterLimits.StartPower(1),...
@@ -31,6 +36,11 @@ lb = [...
 	ClusterLimits.Number(1)];
 
 ub = [...
+	2.1,...
+	ClusterLimits.IntervalTime(2),...
+	1,...
+	ClusterLimits.DecayPower(2),...
+	1,...
 	ClusterLimits.StartTime(2),...
 	ClusterLimits.IntervalTime(2),...
 	ClusterLimits.StartPower(2),...
@@ -52,6 +62,7 @@ ub = [...
 	ClusterLimits.DecayPower(2),...
 	ClusterLimits.Number(2)];
 
+clear args;
 args(1)  = rnd(ClusterLimits.StartTime);   
 args(2)  = rnd(ClusterLimits.IntervalTime);
 args(3)  = rnd(ClusterLimits.StartPower);  
@@ -72,10 +83,53 @@ args(17) = rnd(ClusterLimits.IntervalTime);
 args(18) = rnd(ClusterLimits.StartPower);  
 args(19) = rnd(ClusterLimits.DecayPower);  
 args(20) = rndi(ClusterLimits.Number);     
+args(21) = rnd(ClusterLimits.StartTime);   
+args(22) = rnd(ClusterLimits.IntervalTime);
+args(23) = rnd(ClusterLimits.StartPower);  
+args(24) = rnd(ClusterLimits.DecayPower);  
+args(25) = rndi(ClusterLimits.Number);     
 
-options = optimset('TolFun', 60, 'MaxFunEvals', 1000);
-[x, f] = fmincon(@CostStraigntCompare, args, [], [], [], [], lb, ub, [], options);
-
-[fit, y1, y2, x] = CostStraigntCompare( x );
+%gaOpt = gaoptimset('PlotFcns', @gaplotbestfun, 'PlotInterval', 5, 'PopInitRange', [lb; ub]);
+gaOpt = gaoptimset( 'PlotFcns', @PlotClusters,...
+                    'PlotInterval', 1,...
+                    'PopInitRange', [lb; ub],...
+                    'PopulationSize', 100,...
+                    'EliteCount', 10,...
+                    'TolFun', 0,...
+                    'PopulationType', 'doubleVector',... 
+                    'Generations', 1000);
+                
+if exist('population')
+    gaOpt.InitialPopulation = population;
+end
+n = 4;
+for a = 1:n
+    [X, f, exitflag, output, population] = ga(@CostStraigntCompare, numel(args), [], [], [], [], lb, ub, [], gaOpt);
+    gaOpt.InitialPopulation = population;
+end
+[fit, y1, y2, x] = CostStraigntCompare( X );
 semilogy(x, y1, x, y2);
+title([' Fitness: ' num2str(f)]);
+
+
+%%
+%options = optimset('TolFun', 60, 'MaxFunEvals', 1000);
+%[X, f] = fmincon(@CostStraigntCompare, args, [], [], [], [], lb, ub, [], options);
+
+figure(2);
+[fit, y1, y2, x, fity, clstrs] = CostStraigntCompare( X );
+semilogy(x, y1, x, y2);
+
+colors = hsv(5);
+hold on;
+for a = 1:numel(clstrs)
+    h = stem(clstrs(a).x + 2.2e-9, clstrs(a).y);
+    set(h, 'color', colors(a,:));
+    set(get(h,'BaseLine'),'BaseValue',1e-3);
+end
+hold off
+xlim([0, 5e-8])
+ylim([1e-3, 1])
+
+
 
