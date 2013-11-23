@@ -1,4 +1,4 @@
-function [Y, impResp, two] = CreatePathFromClusters(clusters, time)
+function [Y, impResp, two, clstrs] = CreatePathFromClusters(clusters, time)
 %CREATEPATHFROMCLUSTERS Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -14,6 +14,8 @@ end
 two = [];
 for a = 1:NumberOfClusters
     two(a).x = time;
+    clstrs(a).x = impResp(a).x;
+    clstrs(a).y = impResp(a).y;
     two(a).y = resample_array(impResp(a).x, impResp(a).y, time);
     Fs = 1/(time(2) - time(1));
     d = fdesign.lowpass('n,fp,fst,ast', 17, 2400e6, 2480e6, 100, Fs);
