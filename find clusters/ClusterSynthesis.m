@@ -120,6 +120,7 @@ title([' Fitness: ' num2str(f)]);
 figure(3);
 [fit, y1, y2, x, fity, clstrs] = CostStraigntCompare( X );
 semilogy(x, y1, x, y2);
+%semilogy(x, y2);
 
 colors = hsv(5);
 hold on;

@@ -14,9 +14,9 @@ for a = 1:5
     clusters(a) = cluster;
 end
 
-load('find clusters/pos7 filtered extrems.mat');
-time = T_imp_resp_7';
-y1 = A_imp_resp_7';
+load('find clusters/pos8 filtered extrems.mat');
+time = T_imp_resp_8';
+y1 = A_imp_resp_8';
 [y2 impResp two clstrs] = CreatePathFromClusters(clusters, time);
 y1 = y1./max(abs(y1));
 y2 = y2./max(abs(y2));
