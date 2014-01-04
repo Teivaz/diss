@@ -119,19 +119,34 @@ title([' Fitness: ' num2str(f)]);
 
 figure(3);
 [fit, y1, y2, x, fity, clstrs] = CostStraigntCompare( X );
-semilogy(x, y1, x, y2);
+areaHandle = area(x, y1);
+hold on;
+set(gca, 'YScale', 'log'); 
+set(areaHandle, 'BaseValue', 1e-3);
+set(areaHandle, 'FaceColor', [166, 198, 198]./255, 'LineStyle', 'none');
+
+%h = semilogy(x, y1, 'k', x, y2, '--k');
+h = semilogy(x, y2, '--k');
+set(h, 'linewidth', 2);
+
 %semilogy(x, y2);
 
 colors = hsv(5);
-hold on;
 for a = 1:numel(clstrs)
-    h = stem(clstrs(a).x + 2.2e-9, clstrs(a).y);
+    h = stem(clstrs(a).x+ 2.2e-9, clstrs(a).y, 'o');% 
     set(h, 'color', colors(a,:));
     set(get(h,'BaseLine'),'BaseValue',1e-3);
+    set(h, 'linewidth', 2);
 end
 hold off
 xlim([0, 5e-8])
 ylim([1e-3, 1])
+PlotProps('Время, с', '');
 
-
-
+%%
+x = [1,2,3];
+y = [1,3,2];
+y2 = [2,2,1];
+h = plot(x, y);%, y2, [cellstr('y01'), cellstr('y2')]);
+%set(h, 'linewidth', 2);
+PlotProps('time', 'f');
