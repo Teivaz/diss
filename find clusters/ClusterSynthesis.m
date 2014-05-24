@@ -118,12 +118,12 @@ title([' Fitness: ' num2str(f)]);
 %[X, f] = fmincon(@CostStraigntCompare, args, [], [], [], [], lb, ub, [], options);
 
 figure(3);
-[fit, y1, y2, x, fity, clstrs] = CostStraigntCompare( X );
-areaHandle = area(x, y1);
+[fit, y1, y2, x, fity, clstrs] = CostStraigntCompare(6, X );
+%areaHandle = area(x, y1);
 hold on;
 set(gca, 'YScale', 'log'); 
-set(areaHandle, 'BaseValue', 1e-3);
-set(areaHandle, 'FaceColor', [166, 198, 198]./255, 'LineStyle', 'none');
+%set(areaHandle, 'BaseValue', 1e-3);
+%set(areaHandle, 'FaceColor', [166, 198, 198]./255, 'LineStyle', 'none');
 
 %h = semilogy(x, y1, 'k', x, y2, '--k');
 h = semilogy(x, y2, '--k');
@@ -133,7 +133,7 @@ set(h, 'linewidth', 2);
 
 colors = hsv(5);
 for a = 1:numel(clstrs)
-    h = stem(clstrs(a).x+ 2.2e-9, clstrs(a).y, 'o');% 
+    h = stem(clstrs(a).x, clstrs(a).y, 'o');% 
     set(h, 'color', colors(a,:));
     set(get(h,'BaseLine'),'BaseValue',1e-3);
     set(h, 'linewidth', 2);
