@@ -11,5 +11,6 @@ function [out, num] = Reflect(walls, currentWallNum, beam)
 			num = i;
         end
     end
+    num = beam.idx;
     out = beam;
 end
