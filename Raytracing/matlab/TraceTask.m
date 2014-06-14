@@ -1,5 +1,9 @@
 classdef TraceTask
 	properties
+		% Sweep with step or trace a single angle
+		traceMode1 = 'sweep';
+		traceMode2 = 'sweep';
+
 		% Degrees
 		sweepStep1Pass = 10;
 		sweepStep2Pass = 10;

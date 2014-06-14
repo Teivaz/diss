@@ -3,8 +3,18 @@ function [result] = Trace (traceTask)
 s_step1 = traceTask.sweepStep1Pass;
 s_step2 = traceTask.sweepStep2Pass;
 
-s_primarySweep = 0:s_step1:360;
-s_secondarySweep = 0:s_step2:360;
+if strcmp(traceTask.traceMode1, 'single')
+    s_primarySweep = s_step1;
+    s_step1 = 1;
+else
+    s_primarySweep = 0:s_step1:360;
+end
+if strcmp(traceTask.traceMode2, 'single')
+    s_secondarySweep = s_step2;
+    s_step2 = 1;
+else
+    s_secondarySweep = 0:s_step2:360;
+end
 
 % Time
 s_step = 0.01;
@@ -40,7 +50,7 @@ s_beamsR2(length(s_primarySweep), length(s_secondarySweep)) = Beam();
 
 
 filename = create_name([num2str(s_step1),'_', num2str(s_step2)], s_walls, s_transmitter, s_receiever);
-if exists_data(filename)
+if (s_step2 > 1) && (s_step1 > 1) && exists_data(filename)
     [beams, s_walls, s_transmitter, s_receiever] = load_data(filename);
     s_beamsR1 = beams(:, 1)';
     s_beamsR2 = beams(:, 2:end);
@@ -96,8 +106,7 @@ else
         	hold on;
         	scatter(s_receiever(1), s_receiever(2));
         	for wall = s_walls
-        		h = line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
-        		%plot(h);
+        		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
         	end
         	axis([-0.5,7.5,-0.5,7]);
 
@@ -132,8 +141,9 @@ else
         axis([-0.5,7.5,-0.5,7]);
     end
 
-    save_data(filename, [s_beamsR1', s_beamsR2], s_walls, s_transmitter, s_receiever);
-
+    if (s_step1 > 1) && (s_step2 > 1)
+        save_data(filename, [s_beamsR1', s_beamsR2], s_walls, s_transmitter, s_receiever);
+    end
 end
 
 graph = zeros(2, numel(s_beamsR1));
@@ -199,7 +209,11 @@ for i_out = 1:length(graph_sum)
     while (graph2_sorted(1, i) < max_)
         if (graph2_sorted(1, i) < min_)
             i = 1 + i;
-            continue;
+            if(i > size(graph2_sorted, 2))
+                break;
+            else
+                continue;
+            end
         end
         graph_sum(2, i_out) = graph2_sorted(2, i) + graph_sum(2, i_out);
         i = 1 + i;

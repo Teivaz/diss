@@ -5,11 +5,14 @@ n_r = [1, 0];
 n_u = [0, 1];
 n_d = [0, -1];
 
-task.showGraphs = 1;
+task.showGraphs = 0;
 task.showProgressGraphs = 1;
 
-task.sweepStep1Pass = 2;
-task.sweepStep2Pass = 1;
+task.traceMode1 = 'single';
+task.traceMode2 = 'single';
+
+task.sweepStep1Pass = 50;
+task.sweepStep2Pass = 1000;
 task.obstacles(1) = Segment( [0,0], [7,0], [0,1] );	% Bottom
 task.obstacles(2) = Segment( [7,0], [7,6.51], [-1,0] );   % Right
 task.obstacles(3) = Segment( [7,6.51], [0,6.51], [0,-1] );	% Top
