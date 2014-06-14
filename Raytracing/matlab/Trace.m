@@ -54,6 +54,39 @@ if (s_step2 > 1) && (s_step1 > 1) && exists_data(filename)
     [beams, s_walls, s_transmitter, s_receiever] = load_data(filename);
     s_beamsR1 = beams(:, 1)';
     s_beamsR2 = beams(:, 2:end);
+    
+    i_a = 1;
+    if s_showProgressGraphs > 0
+        for beam = s_beamsR1
+        	hold off;
+        	scatter(s_transmitter(1), s_transmitter(2));
+        	hold on;
+        	scatter(s_receiever(1), s_receiever(2));
+        	for wall = s_walls
+        		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
+        	end
+        	axis([-0.5,7.5,-0.5,7]);
+            scatter(beam.start(1), beam.start(2), 100, beam.amplitude/beam.distance, 'x');
+
+            i_b = 1;
+            for b = s_secondarySweep
+                pt = s_beamsR2(i_a, i_b);
+                if pt.amplitude > 0
+                    ampl = pt.amplitude / pt.distance;
+                    x = pt.start(1);
+                    y = pt.start(2);
+                	scatter(x, y, 10, ampl);
+                    if s_showProgressGraphs > 1
+                        drawnow();
+                    end
+                end
+                i_b = i_b + 1;
+            end
+            drawnow();
+            i_a = i_a + 1;
+        end
+    end
+    
 else
     i_a = 1;
 
@@ -99,7 +132,7 @@ else
             s_beamsR2(i_a, i_b) = beamReceiver;
         end
 
-        if s_showProgressGraphs
+        if s_showProgressGraphs > 0
             % Plot process
         	hold off;
         	scatter(s_transmitter(1), s_transmitter(2));
@@ -109,6 +142,7 @@ else
         		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
         	end
         	axis([-0.5,7.5,-0.5,7]);
+            scatter(beam.point(1), beam.point(2), 100, beam.amplitude/beam.distance, 'x');
 
             i_b = 1;
             for b = s_secondarySweep
@@ -118,11 +152,12 @@ else
                     x = pt.point(1);
                     y = pt.point(2);
                 	scatter(x, y, 10, ampl);
-                    drawnow();
+                    if s_showProgressGraphs > 1
+                        drawnow();
+                    end
                 end
                 i_b = i_b + 1;
             end
-            scatter(beam.point(1), beam.point(2), 100, beam.amplitude/beam.distance, 'x');
             drawnow();
         end
             
@@ -130,7 +165,7 @@ else
     	i_a = 1 + i_a;
     end
 
-    if s_showProgressGraphs
+    if 0
         % Plot result
         for a = 1:length(s_primarySweep)
         	scatter(s_points1(a).point(1), s_points1(a).point(2), 100, s_points1(a).amplitude/ s_points1(a).distance, 'x');
