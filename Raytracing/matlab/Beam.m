@@ -68,12 +68,16 @@ classdef Beam
             self.distance = self.distance + distance;
         end
 
-        function self = AddIntersectionPoint(self, point, idx)
+        function self = AddIntersectionPoint(self, point2, idx)
             len1 = norm(self.point - self.start);
-            len2 = norm(self.point - point);
+            len2 = norm(point2 - self.start);
+            
+            if len2 == 0
+                return;
+            end
             
             if (len1 == 0) || (len2 < len1)
-                self.point = point;
+                self.point = point2;
                 self.idx = idx;
             end
         end
