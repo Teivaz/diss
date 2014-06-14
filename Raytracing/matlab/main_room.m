@@ -6,7 +6,7 @@ n_u = [0, 1];
 n_d = [0, -1];
 
 task.showGraphs = 1;
-task.showProgressGraphs = 2;
+task.showProgressGraphs = 1;
 
 task.sweepStep1Pass = 10;
 task.sweepStep2Pass = 2;

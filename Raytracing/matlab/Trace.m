@@ -85,6 +85,20 @@ if (s_step2 > 1) && (s_step1 > 1) && exists_data(filename)
             drawnow();
             i_a = i_a + 1;
         end
+        % Plot result
+        i_a = 1;
+        for point1 = s_beamsR1
+            hold off;
+        	scatter(point1.start(1), point1.start(2), 100, point1.amplitude / point1.distance, 'x');
+            hold on;
+        	for point2 = s_beamsR2(i_a)
+        		scatter(point2.start(1), point2.start(2), 10, point2.amplitude / point2.distance);
+            end
+            i_a = i_a + 1;
+        end
+        axis([-0.5,7.5,-0.5,7]);
+        drawnow();
+        hold off;
     end
     
 else
@@ -93,7 +107,7 @@ else
     for a = s_primarySweep
     	%s_points2 = Beam(s_transmitter, s_transmitter, 1, 0);
     	dir = [cos(a / 180 * pi), sin(a / 180 * pi)];
-    	beam = Beam(dir, s_transmitter, 1 / length(s_primarySweep)); % Disspate power
+    	beam = Beam(dir, s_transmitter, 1 / length(s_primarySweep) * 2); % Disspate power over hemisphere
     	[beam, wallNum] = Reflect(s_walls, 0, beam);
         beam = beam.SumUpDistance();
 
@@ -165,7 +179,7 @@ else
     	i_a = 1 + i_a;
     end
 
-    if 0
+    if s_showProgressGraphs
         % Plot result
         for a = 1:length(s_primarySweep)
         	scatter(s_points1(a).point(1), s_points1(a).point(2), 100, s_points1(a).amplitude/ s_points1(a).distance, 'x');
