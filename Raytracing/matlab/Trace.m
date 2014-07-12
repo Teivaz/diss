@@ -275,6 +275,10 @@ for i_out = 1:length(graph_sum)
     end
 end
 
+% Convert meter to nano seconds
+graph_sum(1, :) = graph_sum(1, :) ./ (1e-9 * 3e8);
+
+    
 % { Normalize
 n_max = max(graph_sum(2, :));
 graph_sum(2, :) = graph_sum(2, :) ./ n_max;
@@ -294,11 +298,11 @@ end
 
 %%
 
-fp = 3;
+fp = 1.5;
 fst = 5;
 ap = 3;
-ast = 100;
-n = 17;
+ast = 10;
+n = 19;
 Fs = 1/(graph_sum(1,2)-(graph_sum(1,1)));
 ftr = fdesign.lowpass('n,fp,ap', n, fp, ap, Fs);
 hftr = design(ftr);
