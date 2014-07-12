@@ -126,7 +126,7 @@ else
         for b = s_secondarySweep
             dir2 = [cos(b / 180 * pi), sin(b / 180 * pi)];
             beam2 = ScatterWall(beam, s_walls(wallNum), dir2);
-            beam2.amplitude = beam2.amplitude ./ length(s_secondarySweep); % Disspate power
+            beam2.amplitude = beam2.amplitude ./ length(s_secondarySweep) *2; % Disspate power
             [beam2, wallNum2] = Reflect(s_walls, wallNum, beam2);
             beam2 = beam2.SumUpDistance();
             s_points2(i_a, i_b) = beam2;
@@ -211,6 +211,8 @@ for beam = s_beamsR1
 	i_a = 1 + i_a;
 end
 
+
+
 %%
 if s_showGraphs
     figure(2);
@@ -276,8 +278,12 @@ for i_out = 1:length(graph_sum)
 end
 
 % Convert meter to nano seconds
-graph_sum(1, :) = graph_sum(1, :) ./ (1e-9 * 3e8);
-
+%graph(1, :) = graph(1, :) ./ 0.3; % meters to ns
+%graph2(1, :) = graph2(1, :) ./ 0.3; % meters to ns
+%graph_sum(1, :) = graph_sum(1, :) ./ 3e8 * 1e9  ;
+times = graph_sum(1, :);
+times = times ./ 0.3;
+graph_sum(1, :) = times;
     
 % { Normalize
 n_max = max(graph_sum(2, :));
@@ -310,6 +316,10 @@ hftr = design(ftr);
 
 filtered_graph = filter(hftr, graph_sum(2,:));
 filtered_graph = filtered_graph ./ max(filtered_graph);
+
+% Time is somewhy scaled by 1.7. Don't know why
+graph_sum(1, :) = graph_sum(1, :) .* 1.7;
+
 % {
 if s_showGraphs
     figure(3);
@@ -322,6 +332,7 @@ if s_showGraphs
     set(gca, 'YScale', 'log');
 end
 %}
+
 
 result = [graph_sum(1, :); filtered_graph];
 end
