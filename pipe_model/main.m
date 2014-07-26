@@ -9,7 +9,7 @@ n_r = [1, 0];
 n_u = [0, 1];
 n_d = [0, -1];
 
-task.showGraphs = 0;
+task.showGraphs = 1;
 task.showProgressGraphs = 0;
 
 task.sweepStep1Pass = 10;

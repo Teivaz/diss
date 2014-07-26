@@ -4,8 +4,8 @@ threshold = 1e-3;
 i = 1;
 clear clusters;
 for a = 1:5
-    cluster.StartTime = args(i)*1e-9; i=i+1;
-    cluster.IntervalTime = args(i)*1e-9; i=i+1;
+    cluster.StartTime = args(i); i=i+1;
+    cluster.IntervalTime = args(i); i=i+1;
     cluster.StartPower = args(i); i=i+1;
     cluster.DecayPower = args(i); i=i+1;
     cluster.Number = args(i); i=i+1;  
