@@ -138,7 +138,7 @@ else
 %%% PSO ALGORITHM
 
 fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
-Pdef = [1 2 5 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
+Pdef = [1 4 8 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
 
 pltFcn = '';
 
