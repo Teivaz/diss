@@ -1,6 +1,6 @@
 
-path(path, '../Raytracing/matlab');
-path(path, '../Functions');
+addpath('../Libs/PSO/', '../Libs/PSO/hiddenutils/', '../Libs/PSO/testfunctions/');
+addpath('../Raytracing/matlab', '../Functions');
 
 task = TraceTask();
 
@@ -71,9 +71,9 @@ i = 1;
 delta = 0.1;
 clear result;
 
-runTask = struct(...
-        'hasTraceTask', 1,...
-        'traceTask', task...
+runTask = struct...
+        ('traceTask', task...
+        ,'traceResult', []...
         );
 
-result = run(runTask);
+result = RunPipeTask(runTask);

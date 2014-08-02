@@ -94,9 +94,23 @@ args(23) = rnd(ClusterLimits.StartPower);
 args(24) = rnd(ClusterLimits.DecayPower);  
 args(25) = rndi(ClusterLimits.Number);     
 
+if isfield(synthTask, 'fitnessLimit')
+    FitnessLimit = synthTask.fitnessLimit;
+else
+    FitnessLimit = -Inf;
+end
+
+if isfield(synthTask, 'plotProgress') && synthTask.plotProgress ~= 0
+    PlotFcns = @(options, state, flag)PlotClusters(synthTask.traceResult, options, state, flag);
+else
+    PlotFcns = @(options, state, flag)0;
+end
+
+if 0
+%%% GENETIC ALGORITHM
 %gaOpt = gaoptimset('PlotFcns', @gaplotbestfun, 'PlotInterval', 5, 'PopInitRange', [lb; ub]);
 gaOpt = gaoptimset( ...
-                    'PlotFcns', @(options, state, flag)PlotClusters(synthTask.traceResult, options, state, flag),...
+                    'PlotFcns', PlotFcns,...
                     'PlotInterval', 10,...
                     'PopInitRange', [lb; ub],...
                     'PopulationSize', 100,...
@@ -104,55 +118,39 @@ gaOpt = gaoptimset( ...
                     'TolFun', 0,...
                     'PopulationType', 'doubleVector',... 
                     'Generations', 1000,...
-                    'CrossoverFraction',0.53);
+                    'CrossoverFraction', 0.53,...
+                    'FitnessLimit', FitnessLimit...
+                    );
                 
 if exist('population')
     gaOpt.InitialPopulation = population;
 end
-n = 4;
+
+fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
+
+n = 1;
 for a = 1:n
-    [X, f, exitflag, output, population] = ga(@(args)CostStraightCompare(synthTask.traceResult, args), numel(args), [], [], [], [], lb, ub, [], gaOpt);
+    [result, cost, exitflag, output, population] = ga(fitness, numel(args), [], [], [], [], lb, ub, [], gaOpt);
     gaOpt.InitialPopulation = population;
 end
-[fit, y1, y2, x] = CostStraightCompare( X );
-semilogy(x, y1, x, y2);
-title([' Fitness: ' num2str(f)]);
 
+else
+%%% PSO ALGORITHM
 
-%%
-%options = optimset('TolFun', 60, 'MaxFunEvals', 1000);
-%[X, f] = fmincon(@CostStraigntCompare, args, [], [], [], [], lb, ub, [], options);
+fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
+Pdef = [1 20 50 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
 
-figure(3);
-[fit, y1, y2, x, fity, clstrs] = CostStraightCompare(6, X );
-%areaHandle = area(x, y1);
-hold on;
-set(gca, 'YScale', 'log'); 
-%set(areaHandle, 'BaseValue', 1e-3);
-%set(areaHandle, 'FaceColor', [166, 198, 198]./255, 'LineStyle', 'none');
+pltFcn = '';
 
-%h = semilogy(x, y1, 'k', x, y2, '--k');
-h = semilogy(x, y2, '--k');
-set(h, 'linewidth', 2);
+[optOut, tr, te] = pso_Trelea_vectorized(fitness, numel(args), ub, [lb; ub]', 0, Pdef);
 
-%semilogy(x, y2);
-
-colors = hsv(5);
-for a = 1:numel(clstrs)
-    h = stem(clstrs(a).x, clstrs(a).y, 'o');% 
-    set(h, 'color', colors(a,:));
-    set(get(h,'BaseLine'),'BaseValue',1e-3);
-    set(h, 'linewidth', 2);
+result = optOut(1:numel(args));
+cost = optOut(end);
 end
-hold off
-xlim([0, 5e-8])
-ylim([1e-3, 1])
-PlotProps('Время, с', '');
 
-%%
-x = [1,2,3];
-y = [1,3,2];
-y2 = [2,2,1];
-h = plot(x, y);%, y2, [cellstr('y01'), cellstr('y2')]);
-%set(h, 'linewidth', 2);
-PlotProps('time', 'f');
+    
+if isfield(synthTask, 'plotProgress') && synthTask.plotProgress ~= 0
+    [fit, y1, y2, x] = CostStraightCompare( X );
+    semilogy(x, y1, x, y2);
+    title([' Fitness: ' num2str(f)]);
+end
