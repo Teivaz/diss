@@ -12,7 +12,7 @@
 
 % setup figure, change this for your own machine
  clf
- set(gcf,'Position',[651    31   626   474]); % this is the computer dependent part
+% set(gcf,'Position',[651    31   626   474]); % this is the computer dependent part
  %set(gcf,'Position',[743    33   853   492]);
  set(gcf,'Doublebuffer','on');
                

@@ -107,50 +107,58 @@ else
 end
 
 if 0
-%%% GENETIC ALGORITHM
-%gaOpt = gaoptimset('PlotFcns', @gaplotbestfun, 'PlotInterval', 5, 'PopInitRange', [lb; ub]);
-gaOpt = gaoptimset( ...
-                    'PlotFcns', PlotFcns,...
-                    'PlotInterval', 10,...
-                    'PopInitRange', [lb; ub],...
-                    'PopulationSize', 100,...
-                    'EliteCount', 6,...
-                    'TolFun', 0,...
-                    'PopulationType', 'doubleVector',... 
-                    'Generations', 1000,...
-                    'CrossoverFraction', 0.53,...
-                    'FitnessLimit', FitnessLimit...
-                    );
-                
-if exist('population')
-    gaOpt.InitialPopulation = population;
-end
+    %%% GENETIC ALGORITHM
+    %gaOpt = gaoptimset('PlotFcns', @gaplotbestfun, 'PlotInterval', 5, 'PopInitRange', [lb; ub]);
+    gaOpt = gaoptimset( ...
+                        'PlotFcns', PlotFcns,...
+                        'PlotInterval', 10,...
+                        'PopInitRange', [lb; ub],...
+                        'PopulationSize', 100,...
+                        'EliteCount', 6,...
+                        'TolFun', 0,...
+                        'PopulationType', 'doubleVector',... 
+                        'Generations', 1000,...
+                        'CrossoverFraction', 0.53,...
+                        'FitnessLimit', FitnessLimit...
+                        );
 
-fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
+    if exist('population')
+        gaOpt.InitialPopulation = population;
+    end
 
-n = 1;
-for a = 1:n
-    [result, cost, exitflag, output, population] = ga(fitness, numel(args), [], [], [], [], lb, ub, [], gaOpt);
-    gaOpt.InitialPopulation = population;
-end
+    fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
+
+    n = 1;
+    for a = 1:n
+        [result, cost, exitflag, output, population] = ga(fitness, numel(args), [], [], [], [], lb, ub, [], gaOpt);
+        gaOpt.InitialPopulation = population;
+    end
 
 else
 %%% PSO ALGORITHM
 
 fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
-Pdef = [1 20 50 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
+Pdef = [1 2 5 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
 
 pltFcn = '';
 
 [optOut, tr, te] = pso_Trelea_vectorized(fitness, numel(args), ub, [lb; ub]', 0, Pdef);
 
-result = optOut(1:numel(args));
+result_raw = optOut(1:numel(args));
 cost = optOut(end);
-end
 
+for i = 1:5
+    result(i).StartTime = result_raw( (i-1)*5 + 1 );
+    result(i).IntervalTime = result_raw( (i-1)*5 + 2 );
+    result(i).StartPower = result_raw( (i-1)*5 + 3 );
+    result(i).DecayPower = result_raw( (i-1)*5 + 4 );
+    result(i).Number = result_raw( (i-1)*5 + 5 );
+end
+end
     
 if isfield(synthTask, 'plotProgress') && synthTask.plotProgress ~= 0
     [fit, y1, y2, x] = CostStraightCompare( X );
     semilogy(x, y1, x, y2);
     title([' Fitness: ' num2str(f)]);
+end
 end

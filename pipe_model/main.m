@@ -62,18 +62,31 @@ for i = 1:size(items, 1)
 	task.obstacles(i + 4) = Segment(a, b, c);
 end
 
+task11 = task;
+task12 = task;
+task21 = task; 
+task22 = task;
 
-task.transmitterPosition = [1.23, 3.68];
-task.receiverPosition = [1.23, 2.46];
+task11.transmitterPosition = [1.23, 3.68];
+task11.receiverPosition = [1.23, 2.46];
 
+task12.transmitterPosition = [1.23, 3.70];
+task12.receiverPosition = [1.23, 2.46];
+
+task21.transmitterPosition = [1.23, 3.68];
+task21.receiverPosition = [1.23, 2.48];
+
+task22.transmitterPosition = [1.23, 3.70];
+task22.receiverPosition = [1.23, 2.48];
 
 i = 1;
 delta = 0.1;
 clear result;
 
 runTask = struct...
-        ('traceTask', task...
-        ,'traceResult', []...
+        ('traceTask', [task11, task12, task21, task22]...
+        ,'packageSize', 1 ... Kb
+        ,'SNR', 1:5 ...
         );
 
 result = RunPipeTask(runTask);
