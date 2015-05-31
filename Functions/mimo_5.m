@@ -15,7 +15,7 @@ bytes = 1000;
         interp_cube = @(new_Time, Time, Data)interp1(Time, Data, new_Time, 'cubic');
         % Modulation
         mod = modem.pskmod(M, phi);
-        demod = modem.pskdemod(M, phi); 
+        demod = modem.pskdemod(M, phi);
         [F S] = invert_h(impulse_length, times_step, H);
         %----------------------------
         %- Вычисление параметров фильтров

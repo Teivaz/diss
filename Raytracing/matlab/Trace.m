@@ -1,5 +1,5 @@
 function [result] = Trace (traceTask)
-
+%colormap(gray);
 s_step1 = traceTask.sweepStep1Pass;
 s_step2 = traceTask.sweepStep2Pass;
 
@@ -37,7 +37,7 @@ if s_showGraphs
     hold on;
     scatter(s_receiever(1), s_receiever(2));
     for wall = s_walls
-    	line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
+    	line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)], 'color', 'black');
     end
     axis([-0.5,7.5,-0.5,7]);
 end
@@ -48,8 +48,8 @@ s_points2(length(s_primarySweep), length(s_secondarySweep)) = Beam();
 s_beamsR1(1, length(s_primarySweep)) = Beam();
 s_beamsR2(length(s_primarySweep), length(s_secondarySweep)) = Beam();
 
-
-filename = create_name([num2str(s_step1),'_', num2str(s_step2)], s_walls, s_transmitter, s_receiever);
+filename = DataHash(traceTask);
+%filename = create_name([num2str(s_step1),'_', num2str(s_step2)], s_walls, s_transmitter, s_receiever);
 if (s_step2 > 1) && (s_step1 > 1) && exists_data(filename)
     [beams, s_walls, s_transmitter, s_receiever] = load_data(filename);
     s_beamsR1 = beams(:, 1)';
@@ -63,10 +63,10 @@ if (s_step2 > 1) && (s_step1 > 1) && exists_data(filename)
         	hold on;
         	scatter(s_receiever(1), s_receiever(2));
         	for wall = s_walls
-        		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
+        		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)], 'color', 'black');
         	end
         	axis([-0.5,7.5,-0.5,7]);
-            scatter(beam.start(1), beam.start(2), 100, beam.amplitude/beam.distance, 'x');
+            scatter(beam.start(1), beam.start(2), 5, beam.amplitude/beam.distance, 'o');
 
             i_b = 1;
             for b = s_secondarySweep
@@ -89,10 +89,10 @@ if (s_step2 > 1) && (s_step1 > 1) && exists_data(filename)
         i_a = 1;
         for point1 = s_beamsR1
             hold off;
-        	scatter(point1.start(1), point1.start(2), 100, point1.amplitude / point1.distance, 'x');
+        	scatter(point1.start(1), point1.start(2), 5, point1.amplitude / point1.distance, 'o');
             hold on;
         	for point2 = s_beamsR2(i_a)
-        		scatter(point2.start(1), point2.start(2), 10, point2.amplitude / point2.distance);
+        		scatter(point2.start(1), point2.start(2), 10, point2.amplitude / point2.distance, '.');
             end
             i_a = i_a + 1;
         end
@@ -153,10 +153,12 @@ else
         	hold on;
         	scatter(s_receiever(1), s_receiever(2));
         	for wall = s_walls
-        		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)]);
+        		line([wall.a(1), wall.b(1)], [wall.a(2), wall.b(2)], 'color', 'black');
         	end
         	axis([-0.5,7.5,-0.5,7]);
-            scatter(beam.point(1), beam.point(2), 100, beam.amplitude/beam.distance, 'x');
+            if(~isinf(beam.amplitude/beam.distance))
+                scatter(beam.point(1), beam.point(2), 100, beam.amplitude/beam.distance, 'o');
+            end
 
             i_b = 1;
             for b = s_secondarySweep
@@ -165,7 +167,9 @@ else
                     ampl = pt.amplitude / pt.distance;
                     x = pt.point(1);
                     y = pt.point(2);
-                	scatter(x, y, 10, ampl);
+                    
+                        scatter(x, y, 10, ampl);
+                    
                     if s_showProgressGraphs > 1
                         drawnow();
                     end

@@ -100,52 +100,68 @@ else
     FitnessLimit = -Inf;
 end
 
-if isfield(synthTask, 'plotProgress') && synthTask.plotProgress ~= 0
-    PlotFcns = @(options, state, flag)PlotClusters(synthTask.traceResult, options, state, flag);
+name = num2str(hash([synthTask.traceResult.time synthTask.traceResult.value]));
+loaded_result = load_optimized(name);
+
+
+if isfield(loaded_result, 'cost') && (loaded_result.cost <= FitnessLimit)
+    result_raw = loaded_result.result_raw;
+    cost = loaded_result.cost;
 else
-    PlotFcns = @(options, state, flag)0;
+    if isfield(synthTask, 'plotProgress') && synthTask.plotProgress ~= 0
+        PlotFcns = @(options, state, flag)PlotClusters(synthTask.traceResult, options, state, flag);
+    else
+        PlotFcns = @(options, state, flag)0;
+    end
+
+    if 0
+        %%% GENETIC ALGORITHM
+        %gaOpt = gaoptimset('PlotFcns', @gaplotbestfun, 'PlotInterval', 5, 'PopInitRange', [lb; ub]);
+        gaOpt = gaoptimset( ...
+                            'PlotFcns', PlotFcns,...
+                            'PlotInterval', 10,...
+                            'PopInitRange', [lb; ub],...
+                            'PopulationSize', 100,...
+                            'EliteCount', 6,...
+                            'TolFun', 0,...
+                            'PopulationType', 'doubleVector',... 
+                            'Generations', 1000,...
+                            'CrossoverFraction', 0.53,...
+                            'FitnessLimit', FitnessLimit...
+                            );
+
+        if exist('population')
+            gaOpt.InitialPopulation = population;
+        end
+
+        fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
+
+        n = 1;
+        for a = 1:n
+            [result_raw, cost, exitflag, output, population] = ga(fitness, numel(args), [], [], [], [], lb, ub, [], gaOpt);
+            gaOpt.InitialPopulation = population;
+        end
+
+    else
+        %%% PSO ALGORITHM
+
+        fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
+        Pdef = [1 4 8 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
+
+        pltFcn = '';
+
+        [optOut, tr, te] = pso_Trelea_vectorized(fitness, numel(args), ub, [lb; ub]', 0, Pdef);
+
+        result_raw = optOut(1:numel(args));
+        cost = optOut(end);
+    end
 end
 
-if 0
-    %%% GENETIC ALGORITHM
-    %gaOpt = gaoptimset('PlotFcns', @gaplotbestfun, 'PlotInterval', 5, 'PopInitRange', [lb; ub]);
-    gaOpt = gaoptimset( ...
-                        'PlotFcns', PlotFcns,...
-                        'PlotInterval', 10,...
-                        'PopInitRange', [lb; ub],...
-                        'PopulationSize', 100,...
-                        'EliteCount', 6,...
-                        'TolFun', 0,...
-                        'PopulationType', 'doubleVector',... 
-                        'Generations', 1000,...
-                        'CrossoverFraction', 0.53,...
-                        'FitnessLimit', FitnessLimit...
-                        );
-
-    if exist('population')
-        gaOpt.InitialPopulation = population;
-    end
-
-    fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
-
-    n = 1;
-    for a = 1:n
-        [result, cost, exitflag, output, population] = ga(fitness, numel(args), [], [], [], [], lb, ub, [], gaOpt);
-        gaOpt.InitialPopulation = population;
-    end
-
-else
-%%% PSO ALGORITHM
-
-fitness = @(args)CostStraightCompare(synthTask.traceResult, args);
-Pdef = [1 4 8 2 2 0.9 0.4 20 1e-25 250 NaN 0 0];
-
-pltFcn = '';
-
-[optOut, tr, te] = pso_Trelea_vectorized(fitness, numel(args), ub, [lb; ub]', 0, Pdef);
-
-result_raw = optOut(1:numel(args));
-cost = optOut(end);
+dir_exists = exists_data(['cache/',name]);
+if ~dir_exists
+    mkdir(['cache/', name]);
+end
+save(['cache/', name, '/data.mat'], 'result_raw', 'cost');
 
 for i = 1:5
     result(i).StartTime = result_raw( (i-1)*5 + 1 );
@@ -153,7 +169,6 @@ for i = 1:5
     result(i).StartPower = result_raw( (i-1)*5 + 3 );
     result(i).DecayPower = result_raw( (i-1)*5 + 4 );
     result(i).Number = result_raw( (i-1)*5 + 5 );
-end
 end
     
 if isfield(synthTask, 'plotProgress') && synthTask.plotProgress ~= 0

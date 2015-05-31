@@ -1,4 +1,6 @@
-function [name] = create_name(name, walls, transmitter, receiever)
+function [ret] = create_name(name, walls, transmitter, receiever)
+    ret = DataHash([name, num2str(walls),num2str(transmitter),num2str(receiever)]);
+    return;
 	% check dirs
 	checksum = 0;
 	for wall = walls
@@ -12,5 +14,5 @@ function [name] = create_name(name, walls, transmitter, receiever)
 	checksum = (checksum + receiever(1) * 1e7);
 	checksum = (checksum + receiever(2) * 1e8);
 	
-	name = [name, '_', num2str(checksum)];
+	ret = [name, '_', num2str(checksum)];
 end
